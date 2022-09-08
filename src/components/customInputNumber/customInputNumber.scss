@@ -1,0 +1,14 @@
+.input-number-root {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+
+  input {
+    font-size: 16px;
+    text-align: center;
+    width: 48px;
+    height: 48px;
+    margin: auto 8px;
+  }
+}

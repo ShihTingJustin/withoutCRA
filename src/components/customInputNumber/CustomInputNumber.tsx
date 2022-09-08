@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-
+import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import Button from '../button/Button';
 
 import './customInputNumber.scss';
@@ -38,11 +38,15 @@ const CustomInputNumber = React.forwardRef(
     return (
       <div className="input-number-root">
         <Button>
-          <span>-</span>
+          <span>
+            <AiOutlineMinus size={30} color="#79b5d6" />
+          </span>
         </Button>
         <input value={stateValue} ref={inputRef} onChange={handleChange} {...inputProps} />
         <Button>
-          <span>+</span>
+          <span>
+            <AiOutlinePlus size={30} color="#79b5d6" />
+          </span>
         </Button>
       </div>
     );

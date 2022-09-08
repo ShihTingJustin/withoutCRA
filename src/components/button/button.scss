@@ -2,5 +2,18 @@
   button {
     width: 48px;
     height: 48px;
+    border: 1px solid #79b5d6;
+    border-radius: 6px;
+    background-color: #fff;
+    vertical-align: middle;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #ecf4f9;
+    }
+
+    &:active {
+      background-color: #d0e5f2;
+    }
   }
 }

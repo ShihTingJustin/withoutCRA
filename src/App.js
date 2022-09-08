@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
-const App = () =>{
-    return (
-        <h1>
-            withoutCRA
-        </h1>
-    )
-}
+const App = () => {
+  return <h1>withoutCRA</h1>;
+};
 
-export default App
+export default App;

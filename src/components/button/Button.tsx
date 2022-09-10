@@ -2,10 +2,16 @@ import React from 'react';
 
 import './button.scss';
 
-const Button = ({ children }: { children: React.ReactNode }) => {
+const Button = ({
+  children,
+  onClick
+}: {
+  children: React.ReactNode;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}) => {
   return (
     <div className="button-root">
-      <button>{children}</button>
+      <button onClick={onClick}>{children}</button>
     </div>
   );
 };

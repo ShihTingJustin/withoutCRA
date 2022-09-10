@@ -5,7 +5,7 @@ import '../style/global.scss';
 import CustomInputNumber from './components/customInputNumber/CustomInputNumber';
 
 const App = () => {
-  return <CustomInputNumber onChange={(e) => console.log(e)} />;
+  return <CustomInputNumber max={10} min={0} step={2} onChange={(e) => console.log(e)} />;
 };
 
 export default App;

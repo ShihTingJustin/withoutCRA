@@ -20,30 +20,42 @@ interface InputNumberProps<T extends ValueType = ValueType>
 
 const CustomInputNumber = React.forwardRef(
   (props: InputNumberProps, ref: React.Ref<HTMLInputElement>) => {
-    const { min, max, step, value = '', disabled, onChange, onBlur, ...inputProps } = props;
+    const { min = 0, max, step = 1, value = 0, disabled, onChange, onBlur, ...inputProps } = props;
 
     const inputRef = useRef<HTMLInputElement>(null);
     React.useImperativeHandle(ref, () => inputRef.current);
 
-    const [stateValue, setValue] = useState<ValueType>(value);
+    const [stateValue, setValue] = useState<number>(Number(value));
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const notNumber = Number.isNaN(Number(e.target.value));
+      const value = Number(e.target.value);
+      const notNumber = Number.isNaN(value);
       if (notNumber) return e.preventDefault();
-
       onChange(e);
-      setValue(e.target.value);
+      setValue(value);
+    };
+
+    const handleMinus = () => {
+      const newValue = stateValue - step;
+      const isValueValid = newValue >= min;
+      if (isValueValid) setValue(newValue);
+    };
+
+    const handleAdd = () => {
+      const newValue = stateValue + step;
+      const isValueValid = newValue <= max;
+      if (isValueValid) setValue(newValue);
     };
 
     return (
       <div className="input-number-root">
-        <Button>
+        <Button onClick={handleMinus}>
           <span>
             <AiOutlineMinus size={30} color="#79b5d6" />
           </span>
         </Button>
         <input value={stateValue} ref={inputRef} onChange={handleChange} {...inputProps} />
-        <Button>
+        <Button onClick={handleAdd}>
           <span>
             <AiOutlinePlus size={30} color="#79b5d6" />
           </span>

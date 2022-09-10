@@ -3,13 +3,16 @@ import React, { useState } from 'react';
 import CustomInputNumber from '../customInputNumber/CustomInputNumber';
 
 import './roomAllocation.scss';
-
 const Room = () => {
-  const [guestCount, setGuestCount] = useState(1);
+  const [guestCount, setGuestCount] = useState({ adult: 1, child: 0 });
+
+  const handleChange = (guestType: string, value: number) => {
+    setGuestCount((prev) => ({ ...prev, [guestType]: value }));
+  };
 
   return (
     <div className="roomAllocation-root__guest-input-wrap__room">
-      <div className="counter">房間 : {guestCount} 人</div>
+      <div className="counter">房間 : {guestCount.adult + guestCount.child} 人</div>
       <div className="row">
         <div className="guest-type">
           <p>大人</p>
@@ -20,8 +23,9 @@ const Room = () => {
           max={10}
           min={0}
           step={1}
+          value={guestCount.adult}
           onBlur={(e) => console.log(e)}
-          onChange={(e) => console.log(e)}
+          onChange={(e) => handleChange('adult', Number(e.target.value))}
         />
       </div>
       <div className="row">
@@ -33,8 +37,9 @@ const Room = () => {
           max={10}
           min={0}
           step={1}
+          value={guestCount.child}
           onBlur={(e) => console.log(e)}
-          onChange={(e) => console.log(e)}
+          onChange={(e) => handleChange('child', Number(e.target.value))}
         />
       </div>
     </div>

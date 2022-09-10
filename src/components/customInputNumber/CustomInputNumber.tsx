@@ -42,11 +42,16 @@ const CustomInputNumber = React.forwardRef(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) return;
+
       const value = Number(e.target.value);
       const notNumber = Number.isNaN(value);
       if (notNumber) return e.preventDefault();
-      onChange(e);
-      setValue(value);
+
+      const isValueValid = value >= min && value <= max;
+      if (isValueValid) {
+        onChange(e);
+        setValue(value);
+      }
     };
 
     const handleMinus = () => {

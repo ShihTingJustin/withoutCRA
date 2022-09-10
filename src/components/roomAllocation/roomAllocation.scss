@@ -1,0 +1,46 @@
+.roomAllocation-root {
+  padding: 20px 10px 0;
+  width: fit-content;
+  &__room-info-wrap {
+    .total-guest-room {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .yet-distribute-counter {
+      background-color: #effdff;
+      border: 2px solid #cbedff;
+      border-radius: 4px;
+      padding: 12px;
+      margin: 14px 10px;
+    }
+  }
+
+  &__guest-input-wrap {
+    &__room {
+      padding-bottom: 10px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #ededed;
+      }
+      .counter {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 20px auto;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+
+        .guest-type {
+          margin-right: 120px;
+
+          span {
+            color: #a2a2a2;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,20 +1,11 @@
 import React from 'react';
 
+import RoomAllocation from './components/roomAllocation/RoomAllocation';
+
 import '../style/global.scss';
 
-import CustomInputNumber from './components/customInputNumber/CustomInputNumber';
-
 const App = () => {
-  return (
-    <CustomInputNumber
-      name="CustomInputNumber"
-      max={10}
-      min={0}
-      step={2}
-      onBlur={(e) => console.log(e)}
-      onChange={(e) => console.log(e)}
-    />
-  );
+  return <RoomAllocation guest={10} room={3} onChange={(result) => console.log(result)} />;
 };
 
 export default App;

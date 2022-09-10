@@ -20,7 +20,16 @@ interface InputNumberProps<T extends ValueType = ValueType>
 
 const CustomInputNumber = React.forwardRef(
   (props: InputNumberProps, ref: React.Ref<HTMLInputElement>) => {
-    const { min = 0, max, step = 1, value = 0, disabled, onChange, onBlur, ...inputProps } = props;
+    const {
+      min = 0,
+      max,
+      step = 1,
+      value = 0,
+      disabled = false,
+      onChange,
+      onBlur,
+      ...inputProps
+    } = props;
 
     const inputRef = useRef<HTMLInputElement>(null);
     React.useImperativeHandle(ref, () => inputRef.current);
@@ -28,6 +37,7 @@ const CustomInputNumber = React.forwardRef(
     const [stateValue, setValue] = useState<number>(Number(value));
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
       const value = Number(e.target.value);
       const notNumber = Number.isNaN(value);
       if (notNumber) return e.preventDefault();
@@ -36,12 +46,14 @@ const CustomInputNumber = React.forwardRef(
     };
 
     const handleMinus = () => {
+      if (disabled) return;
       const newValue = stateValue - step;
       const isValueValid = newValue >= min;
       if (isValueValid) setValue(newValue);
     };
 
     const handleAdd = () => {
+      if (disabled) return;
       const newValue = stateValue + step;
       const isValueValid = newValue <= max;
       if (isValueValid) setValue(newValue);
@@ -49,15 +61,22 @@ const CustomInputNumber = React.forwardRef(
 
     return (
       <div className="input-number-root">
-        <Button onClick={handleMinus}>
+        <Button disabled={disabled} onClick={handleMinus}>
           <span>
-            <AiOutlineMinus size={30} color="#79b5d6" />
+            <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#79b5d6'} />
           </span>
         </Button>
-        <input value={stateValue} ref={inputRef} onChange={handleChange} {...inputProps} />
-        <Button onClick={handleAdd}>
+        <input
+          data-disabled={disabled}
+          value={stateValue}
+          ref={inputRef}
+          disabled={disabled}
+          onChange={handleChange}
+          {...inputProps}
+        />
+        <Button disabled={disabled} onClick={handleAdd}>
           <span>
-            <AiOutlinePlus size={30} color="#79b5d6" />
+            <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#79b5d6'} />
           </span>
         </Button>
       </div>

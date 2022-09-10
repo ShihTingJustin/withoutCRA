@@ -7,13 +7,18 @@
     background-color: #fff;
     vertical-align: middle;
 
-    &:hover {
-      cursor: pointer;
-      background-color: #ecf4f9;
+    &[data-disabled='false'] {
+      &:hover {
+        cursor: pointer;
+        background-color: #ecf4f9;
+      }
+      &:active {
+        background-color: #d0e5f2;
+      }
     }
 
-    &:active {
-      background-color: #d0e5f2;
+    &[data-disabled='true'] {
+      border: 1px solid #c0c0c0;
     }
   }
 }

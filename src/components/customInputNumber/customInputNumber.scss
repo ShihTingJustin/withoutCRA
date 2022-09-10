@@ -12,5 +12,9 @@
     margin: auto 8px;
     border: 1px solid #c0c0c0;
     border-radius: 6px;
+
+    &[data-disabled='true'] {
+      color: #c0c0c0;
+    }
   }
 }

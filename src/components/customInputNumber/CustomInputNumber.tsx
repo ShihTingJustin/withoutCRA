@@ -36,6 +36,10 @@ const CustomInputNumber = React.forwardRef(
 
     const [stateValue, setValue] = useState<number>(Number(value));
 
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      onBlur(e);
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) return;
       const value = Number(e.target.value);
@@ -71,6 +75,7 @@ const CustomInputNumber = React.forwardRef(
           value={stateValue}
           ref={inputRef}
           disabled={disabled}
+          onBlur={handleBlur}
           onChange={handleChange}
           {...inputProps}
         />

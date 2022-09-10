@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import CustomInputNumber from '../customInputNumber/CustomInputNumber';
 
 import './roomAllocation.scss';
-const Room = () => {
+
+type TotalGuest = { adult: number; child: number };
+
+const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
   const [guestCount, setGuestCount] = useState({ adult: 1, child: 0 });
 
   const handleChange = (guestType: string, value: number) => {
     setGuestCount((prev) => ({ ...prev, [guestType]: value }));
   };
+
+  useEffect(() => {
+    onChange(guestCount);
+  }, [guestCount]);
 
   return (
     <div className="roomAllocation-root__guest-input-wrap__room">
@@ -53,8 +60,16 @@ const RoomAllocation = ({
 }: {
   guest: number;
   room: number;
-  onChange: (result: { adults: number; child: number }[]) => void;
+  onChange: (result: TotalGuest[]) => void;
 }) => {
+  const result = useRef<TotalGuest[]>([]);
+
+  const handleChange = (index: number, value: TotalGuest) => {
+    if (!result.current[index]) result.current[index] = { adult: 0, child: 0 };
+    result.current[index] = value;
+    onChange(result.current);
+  };
+
   return (
     <div className="roomAllocation-root">
       <div className="roomAllocation-root__room-info-wrap">
@@ -65,7 +80,7 @@ const RoomAllocation = ({
       </div>
       <div className="roomAllocation-root__guest-input-wrap">
         {Array.from({ length: room }, (_, index) => (
-          <Room key={index} />
+          <Room key={index} onChange={(value) => handleChange(index, value)} />
         ))}
       </div>
     </div>

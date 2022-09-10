@@ -54,18 +54,35 @@ const CustomInputNumber = React.forwardRef(
       }
     };
 
-    const handleMinus = () => {
+    const handleInputEventManually = (value: string) => {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        'value'
+      ).set;
+      nativeInputValueSetter.call(inputRef.current, value);
+
+      const inputEvent = new Event('input', { bubbles: true });
+      inputRef.current.dispatchEvent(inputEvent);
+    };
+
+    const handleMinus = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (disabled) return;
       const newValue = stateValue - step;
       const isValueValid = newValue >= min;
-      if (isValueValid) setValue(newValue);
+      if (isValueValid) {
+        setValue(newValue);
+        handleInputEventManually(String(newValue));
+      }
     };
 
     const handleAdd = () => {
       if (disabled) return;
       const newValue = stateValue + step;
       const isValueValid = newValue <= max;
-      if (isValueValid) setValue(newValue);
+      if (isValueValid) {
+        setValue(newValue);
+        handleInputEventManually(String(newValue));
+      }
     };
 
     return (

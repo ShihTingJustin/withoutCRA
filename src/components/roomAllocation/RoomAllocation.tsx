@@ -6,6 +6,8 @@ import './roomAllocation.scss';
 
 type TotalGuest = { adult: number; child: number };
 
+const adultMinimum = 1;
+
 const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
   const [guestCount, setGuestCount] = useState({ adult: 1, child: 0 });
 
@@ -28,7 +30,7 @@ const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
         <CustomInputNumber
           name="CustomInputNumber"
           max={10}
-          min={0}
+          min={adultMinimum}
           step={1}
           value={guestCount.adult}
           onBlur={(e) => console.log(e)}
@@ -64,10 +66,24 @@ const RoomAllocation = ({
 }) => {
   const result = useRef<TotalGuest[]>([]);
 
+  const [yetDistributedCount, setYetDistributedCount] = useState<number>(guest);
+
   const handleChange = (index: number, value: TotalGuest) => {
-    if (!result.current[index]) result.current[index] = { adult: 0, child: 0 };
+    // get data for parent onChange callback
+    if (!result.current[index]) {
+      result.current[index] = { adult: 0, child: 0 };
+    }
     result.current[index] = value;
     onChange(result.current);
+
+    // calculate totalGuestCount then update yetDistributedCount
+    const totalGuestCount = result.current.reduce((total, singleRoom) => {
+      const roomCount = Object.values(singleRoom).reduce((acc, curr) => acc + curr);
+      return (total += roomCount);
+    }, 0);
+
+    console.log({ totalGuestCount });
+    setYetDistributedCount(guest - totalGuestCount);
   };
 
   return (
@@ -76,7 +92,7 @@ const RoomAllocation = ({
         <div className="total-guest-room">
           住客人數 : {guest} 人 / {room} 房
         </div>
-        <div className="yet-distribute-counter">尚未分配人數 : {1} 人</div>
+        <div className="yet-distribute-counter">尚未分配人數 : {yetDistributedCount} 人</div>
       </div>
       <div className="roomAllocation-root__guest-input-wrap">
         {Array.from({ length: room }, (_, index) => (

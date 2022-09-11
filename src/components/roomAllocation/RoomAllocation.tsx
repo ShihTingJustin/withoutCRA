@@ -11,10 +11,12 @@ const adultMinimum = 1;
 const Room = ({
   guestLimit,
   yetDistributedCount,
+  disabled,
   onChange
 }: {
   guestLimit: number;
   yetDistributedCount: number;
+  disabled?: boolean;
   minusDisabled?: boolean;
   plusDisabled?: boolean;
   onChange: (value: TotalGuest) => void;
@@ -47,6 +49,7 @@ const Room = ({
           max={guestLimit - guestCount.child}
           min={adultMinimum}
           value={guestCount.adult}
+          disabled={disabled}
           plusDisabled={roomDisabled}
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
@@ -64,6 +67,7 @@ const Room = ({
           max={guestLimit - guestCount.adult}
           min={0}
           value={guestCount.child}
+          disabled={disabled}
           plusDisabled={roomDisabled}
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
@@ -121,6 +125,7 @@ const RoomAllocation = ({
             key={index}
             guestLimit={guestLimit}
             yetDistributedCount={yetDistributedCount}
+            disabled={guest === room}
             onChange={(value) => handleChange(index, value)}
           />
         ))}

@@ -16,6 +16,7 @@ interface InputNumberProps<T extends ValueType = ValueType>
   className?: string;
   minusDisabled?: boolean;
   plusDisabled?: boolean;
+  yetDistributedCount?: number;
   onBlur?: React.FocusEventHandler<HTMLSpanElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -30,6 +31,7 @@ const CustomInputNumber = React.forwardRef(
       disabled = false,
       minusDisabled = false,
       plusDisabled = false,
+      yetDistributedCount = 0,
       onChange,
       onBlur,
       ...inputProps
@@ -46,26 +48,23 @@ const CustomInputNumber = React.forwardRef(
     const finalPlusDisabled = disabled || plusDisabled || statePlusDisabled;
 
     useEffect(() => {
-      if (stateValue <= min) {
-        setMinusDisabled(true);
-      } else {
-        setMinusDisabled(false);
-      }
-
-      if (stateValue >= max) {
-        setPlusDisabled(true);
-      } else {
-        setPlusDisabled(false);
-      }
+      setMinusDisabled(stateValue <= min);
+      setPlusDisabled(stateValue >= max);
 
       if (stateValue >= min && stateValue <= max) {
         handleInputEventManually();
       }
-    }, [stateValue]);
+    }, [stateValue, yetDistributedCount]);
 
     const correctValue = () => {
       if (stateValue < min) setValue(min);
-      if (stateValue > max) setValue(max);
+      if (stateValue > max) {
+        if (yetDistributedCount === 0) {
+          setValue(min);
+        } else {
+          setValue(max);
+        }
+      }
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -75,7 +74,6 @@ const CustomInputNumber = React.forwardRef(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) return;
-
       const value = Number(e.target.value);
       const notNumber = Number.isNaN(value);
       if (notNumber) return e.preventDefault();

@@ -9,10 +9,10 @@ type TotalGuest = { adult: number; child: number };
 const adultMinimum = 1;
 
 const Room = ({
-  minusDisabled = false,
-  plusDisabled = false,
+  yetDistributedCount,
   onChange
 }: {
+  yetDistributedCount: number;
   minusDisabled?: boolean;
   plusDisabled?: boolean;
   onChange: (value: TotalGuest) => void;
@@ -37,10 +37,11 @@ const Room = ({
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
+          max={yetDistributedCount + guestCount.adult}
           min={adultMinimum}
           value={guestCount.adult}
-          plusDisabled={plusDisabled}
-          minusDisabled={minusDisabled}
+          plusDisabled={yetDistributedCount === 0}
+          yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
             console.log(e);
@@ -54,10 +55,11 @@ const Room = ({
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
+          max={yetDistributedCount + guestCount.child}
           min={0}
           value={guestCount.child}
-          plusDisabled={plusDisabled}
-          minusDisabled={minusDisabled}
+          plusDisabled={yetDistributedCount === 0}
+          yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
             console.log(e);
@@ -81,8 +83,6 @@ const RoomAllocation = ({
   const result = useRef<TotalGuest[]>([]);
 
   const [yetDistributedCount, setYetDistributedCount] = useState<number>(guest);
-
-  const plusDisabled = yetDistributedCount === 0;
 
   const handleChange = (index: number, value: TotalGuest) => {
     // get data for parent onChange callback
@@ -112,7 +112,7 @@ const RoomAllocation = ({
         {Array.from({ length: room }, (_, index) => (
           <Room
             key={index}
-            plusDisabled={plusDisabled}
+            yetDistributedCount={yetDistributedCount}
             onChange={(value) => handleChange(index, value)}
           />
         ))}

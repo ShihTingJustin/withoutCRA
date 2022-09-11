@@ -1,4 +1,5 @@
 import React from 'react';
+import useLongPress from '../../hooks/useLongPress';
 
 import './button.scss';
 
@@ -9,11 +10,19 @@ const Button = ({
 }: {
   children: React.ReactNode;
   disabled: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: () => void;
 }) => {
+  const { handleMouseDown, handleMouseUp } = useLongPress({ onClick });
+
   return (
     <div className="button-root">
-      <button data-disabled={disabled} onClick={onClick}>
+      <button
+        data-disabled={disabled}
+        onClick={onClick}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
         {children}
       </button>
     </div>

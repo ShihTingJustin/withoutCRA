@@ -8,8 +8,16 @@ type TotalGuest = { adult: number; child: number };
 
 const adultMinimum = 1;
 
-const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
-  const [guestCount, setGuestCount] = useState({ adult: 1, child: 0 });
+const Room = ({
+  minusDisabled = false,
+  plusDisabled = false,
+  onChange
+}: {
+  minusDisabled?: boolean;
+  plusDisabled?: boolean;
+  onChange: (value: TotalGuest) => void;
+}) => {
+  const [guestCount, setGuestCount] = useState({ adult: adultMinimum, child: 0 });
 
   const handleChange = (guestType: string, value: number) => {
     setGuestCount((prev) => ({ ...prev, [guestType]: value }));
@@ -29,12 +37,15 @@ const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
-          max={10}
           min={adultMinimum}
-          step={1}
           value={guestCount.adult}
+          plusDisabled={plusDisabled}
+          minusDisabled={minusDisabled}
           onBlur={(e) => console.log(e)}
-          onChange={(e) => handleChange('adult', Number(e.target.value))}
+          onChange={(e) => {
+            console.log(e);
+            handleChange('adult', Number(e.target.value));
+          }}
         />
       </div>
       <div className="row">
@@ -43,12 +54,15 @@ const Room = ({ onChange }: { onChange: (value: TotalGuest) => void }) => {
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
-          max={10}
           min={0}
-          step={1}
           value={guestCount.child}
+          plusDisabled={plusDisabled}
+          minusDisabled={minusDisabled}
           onBlur={(e) => console.log(e)}
-          onChange={(e) => handleChange('child', Number(e.target.value))}
+          onChange={(e) => {
+            console.log(e);
+            handleChange('child', Number(e.target.value));
+          }}
         />
       </div>
     </div>
@@ -68,6 +82,8 @@ const RoomAllocation = ({
 
   const [yetDistributedCount, setYetDistributedCount] = useState<number>(guest);
 
+  const plusDisabled = yetDistributedCount === 0;
+
   const handleChange = (index: number, value: TotalGuest) => {
     // get data for parent onChange callback
     if (!result.current[index]) {
@@ -81,8 +97,6 @@ const RoomAllocation = ({
       const roomCount = Object.values(singleRoom).reduce((acc, curr) => acc + curr);
       return (total += roomCount);
     }, 0);
-
-    console.log({ totalGuestCount });
     setYetDistributedCount(guest - totalGuestCount);
   };
 
@@ -96,7 +110,11 @@ const RoomAllocation = ({
       </div>
       <div className="roomAllocation-root__guest-input-wrap">
         {Array.from({ length: room }, (_, index) => (
-          <Room key={index} onChange={(value) => handleChange(index, value)} />
+          <Room
+            key={index}
+            plusDisabled={plusDisabled}
+            onChange={(value) => handleChange(index, value)}
+          />
         ))}
       </div>
     </div>

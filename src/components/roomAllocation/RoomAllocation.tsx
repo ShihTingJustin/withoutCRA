@@ -9,9 +9,11 @@ type TotalGuest = { adult: number; child: number };
 const adultMinimum = 1;
 
 const Room = ({
+  guestLimit,
   yetDistributedCount,
   onChange
 }: {
+  guestLimit: number;
   yetDistributedCount: number;
   minusDisabled?: boolean;
   plusDisabled?: boolean;
@@ -19,12 +21,17 @@ const Room = ({
 }) => {
   const [guestCount, setGuestCount] = useState({ adult: adultMinimum, child: 0 });
 
+  const guestCountRef = useRef(0);
+
+  const roomDisabled = yetDistributedCount === 0 || guestCountRef.current === guestLimit;
+
   const handleChange = (guestType: string, value: number) => {
     setGuestCount((prev) => ({ ...prev, [guestType]: value }));
   };
 
   useEffect(() => {
     onChange(guestCount);
+    guestCountRef.current = Object.values(guestCount).reduce((acc, curr) => acc + curr);
   }, [guestCount]);
 
   return (
@@ -37,10 +44,10 @@ const Room = ({
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
-          max={yetDistributedCount + guestCount.adult}
+          max={guestLimit - guestCount.child}
           min={adultMinimum}
           value={guestCount.adult}
-          plusDisabled={yetDistributedCount === 0}
+          plusDisabled={roomDisabled}
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
@@ -54,10 +61,10 @@ const Room = ({
         </div>
         <CustomInputNumber
           name="CustomInputNumber"
-          max={yetDistributedCount + guestCount.child}
+          max={guestLimit - guestCount.adult}
           min={0}
           value={guestCount.child}
-          plusDisabled={yetDistributedCount === 0}
+          plusDisabled={roomDisabled}
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
@@ -72,10 +79,12 @@ const Room = ({
 const RoomAllocation = ({
   guest,
   room,
+  guestLimit,
   onChange
 }: {
   guest: number;
   room: number;
+  guestLimit: number;
   onChange: (result: TotalGuest[]) => void;
 }) => {
   const result = useRef<TotalGuest[]>([]);
@@ -110,6 +119,7 @@ const RoomAllocation = ({
         {Array.from({ length: room }, (_, index) => (
           <Room
             key={index}
+            guestLimit={guestLimit}
             yetDistributedCount={yetDistributedCount}
             onChange={(value) => handleChange(index, value)}
           />

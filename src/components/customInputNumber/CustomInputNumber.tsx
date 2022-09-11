@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
 import Button from '../button/Button';
 
@@ -14,6 +14,8 @@ interface InputNumberProps<T extends ValueType = ValueType>
   value?: number;
   disabled?: boolean;
   className?: string;
+  minusDisabled?: boolean;
+  plusDisabled?: boolean;
   onBlur?: React.FocusEventHandler<HTMLSpanElement>;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -22,10 +24,12 @@ const CustomInputNumber = React.forwardRef(
   (props: InputNumberProps, ref: React.Ref<HTMLInputElement>) => {
     const {
       min = 0,
-      max,
+      max = 10,
       step = 1,
       value = 0,
       disabled = false,
+      minusDisabled = false,
+      plusDisabled = false,
       onChange,
       onBlur,
       ...inputProps
@@ -35,8 +39,37 @@ const CustomInputNumber = React.forwardRef(
     React.useImperativeHandle(ref, () => inputRef.current);
 
     const [stateValue, setValue] = useState<number>(Number(value));
+    const [stateMinusDisabled, setMinusDisabled] = useState(minusDisabled);
+    const [statePlusDisabled, setPlusDisabled] = useState(plusDisabled);
+
+    const finalMinusDisabled = disabled || minusDisabled || stateMinusDisabled;
+    const finalPlusDisabled = disabled || plusDisabled || statePlusDisabled;
+
+    useEffect(() => {
+      if (stateValue <= min) {
+        setMinusDisabled(true);
+      } else {
+        setMinusDisabled(false);
+      }
+
+      if (stateValue >= max) {
+        setPlusDisabled(true);
+      } else {
+        setPlusDisabled(false);
+      }
+
+      if (stateValue >= min && stateValue <= max) {
+        handleInputEventManually();
+      }
+    }, [stateValue]);
+
+    const correctValue = () => {
+      if (stateValue < min) setValue(min);
+      if (stateValue > max) setValue(max);
+    };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      correctValue();
       onBlur(e);
     };
 
@@ -46,48 +79,43 @@ const CustomInputNumber = React.forwardRef(
       const value = Number(e.target.value);
       const notNumber = Number.isNaN(value);
       if (notNumber) return e.preventDefault();
-
-      const isValueValid = value >= min && value <= max;
-      if (isValueValid) {
-        onChange(e);
-        setValue(value);
-      }
+      setValue(value);
     };
 
-    const handleInputEventManually = (value: string) => {
+    const handleInputEventManually = () => {
+      correctValue();
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
         window.HTMLInputElement.prototype,
         'value'
       ).set;
-      nativeInputValueSetter.call(inputRef.current, value);
+      nativeInputValueSetter.call(inputRef.current, String(stateValue));
 
       const inputEvent = new Event('input', { bubbles: true });
       inputRef.current.dispatchEvent(inputEvent);
+      onChange(inputEvent as unknown as React.ChangeEvent<HTMLInputElement>);
     };
 
-    const handleMinus = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (disabled) return;
+    const handleMinus = () => {
+      if (finalMinusDisabled) return;
       const newValue = stateValue - step;
       const isValueValid = newValue >= min;
       if (isValueValid) {
         setValue(newValue);
-        handleInputEventManually(String(newValue));
       }
     };
 
     const handleAdd = () => {
-      if (disabled) return;
+      if (finalPlusDisabled) return;
       const newValue = stateValue + step;
       const isValueValid = newValue <= max;
       if (isValueValid) {
         setValue(newValue);
-        handleInputEventManually(String(newValue));
       }
     };
 
     return (
       <div className="input-number-root">
-        <Button disabled={disabled} onClick={handleMinus}>
+        <Button disabled={finalMinusDisabled} onClick={handleMinus}>
           <span>
             <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
           </span>
@@ -101,7 +129,7 @@ const CustomInputNumber = React.forwardRef(
           onChange={handleChange}
           {...inputProps}
         />
-        <Button disabled={disabled} onClick={handleAdd}>
+        <Button disabled={finalPlusDisabled} onClick={handleAdd}>
           <span>
             <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
           </span>

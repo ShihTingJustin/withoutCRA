@@ -44,7 +44,6 @@ const Room = ({
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
-            console.log(e);
             handleChange('adult', Number(e.target.value));
           }}
         />
@@ -62,7 +61,6 @@ const Room = ({
           yetDistributedCount={yetDistributedCount}
           onBlur={(e) => console.log(e)}
           onChange={(e) => {
-            console.log(e);
             handleChange('child', Number(e.target.value));
           }}
         />

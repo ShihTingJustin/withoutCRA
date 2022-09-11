@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   padding: 8px;
+  color: #595959;
 
   input {
     font-size: 16px;
@@ -10,11 +11,16 @@
     width: 48px;
     height: 48px;
     margin: auto 8px;
-    border: 1px solid #c0c0c0;
+    border: 1px solid #bfbfbf;
     border-radius: 6px;
 
     &[data-disabled='true'] {
-      color: #c0c0c0;
+      color: #bfbfbf;
+    }
+
+    &:focus {
+      border: 1px solid #bfbfbf;
+      outline: none;
     }
   }
 }

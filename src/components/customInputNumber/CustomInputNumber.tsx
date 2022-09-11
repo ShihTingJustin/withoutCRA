@@ -89,7 +89,7 @@ const CustomInputNumber = React.forwardRef(
       <div className="input-number-root">
         <Button disabled={disabled} onClick={handleMinus}>
           <span>
-            <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#79b5d6'} />
+            <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
           </span>
         </Button>
         <input
@@ -103,7 +103,7 @@ const CustomInputNumber = React.forwardRef(
         />
         <Button disabled={disabled} onClick={handleAdd}>
           <span>
-            <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#79b5d6'} />
+            <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
           </span>
         </Button>
       </div>

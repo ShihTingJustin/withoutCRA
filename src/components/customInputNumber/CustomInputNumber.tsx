@@ -95,20 +95,20 @@ const CustomInputNumber = React.forwardRef(
 
     const handleMinus = () => {
       if (finalMinusDisabled) return;
-      const newValue = stateValue - step;
-      const isValueValid = newValue >= min;
-      if (isValueValid) {
-        setValue(newValue);
-      }
+      setValue((prev) => {
+        const newValue = prev - step;
+        const isValueValid = newValue >= min;
+        return isValueValid ? newValue : prev;
+      });
     };
 
     const handleAdd = () => {
       if (finalPlusDisabled) return;
-      const newValue = stateValue + step;
-      const isValueValid = newValue <= max;
-      if (isValueValid) {
-        setValue(newValue);
-      }
+      setValue((prev) => {
+        const newValue = prev + step;
+        const isValueValid = newValue <= max;
+        return isValueValid ? newValue : prev;
+      });
     };
 
     return (

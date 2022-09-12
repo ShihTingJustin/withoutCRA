@@ -9,13 +9,13 @@ const Button = ({
   onClick
 }: {
   children: React.ReactNode;
-  disabled: boolean;
+  disabled?: boolean;
   onClick: () => void;
 }) => {
   const { handleMouseDown, handleMouseUp } = useLongPress({ onClick });
 
   return (
-    <div className="button-root">
+    <div data-testid="button" className="button-root">
       <button
         data-disabled={disabled}
         onClick={onClick}

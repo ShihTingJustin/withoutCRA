@@ -123,7 +123,7 @@ const CustomInputNumber = forwardRef(
     };
 
     return (
-      <div className="input-number-root">
+      <div data-testid="customInputNumber" className="input-number-root">
         <Button disabled={finalMinusDisabled} onClick={handleMinus}>
           <span>
             <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />

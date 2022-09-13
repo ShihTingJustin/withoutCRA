@@ -89,7 +89,7 @@ const RoomAllocation = ({
   guest: number;
   room: number;
   guestLimit: number;
-  onChange: (result: TotalGuest[]) => void;
+  onChange?: (result: TotalGuest[]) => void;
 }) => {
   const result = useRef<TotalGuest[]>([]);
 
@@ -101,7 +101,7 @@ const RoomAllocation = ({
       result.current[index] = { adult: 0, child: 0 };
     }
     result.current[index] = value;
-    onChange(result.current);
+    onChange?.(result.current);
 
     // calculate totalGuestCount then update yetDistributedCount
     const totalGuestCount = result.current.reduce((total, singleRoom) => {
@@ -112,7 +112,7 @@ const RoomAllocation = ({
   };
 
   return (
-    <div className="roomAllocation-root">
+    <div data-testid="roomAllocation" className="roomAllocation-root">
       <div className="roomAllocation-root__room-info-wrap">
         <div className="total-guest-room">
           住客人數 : {guest} 人 / {room} 房

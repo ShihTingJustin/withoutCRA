@@ -130,6 +130,7 @@ const CustomInputNumber = forwardRef(
           </span>
         </Button>
         <input
+          data-testid="customInputNumber-input"
           data-disabled={disabled}
           value={stateValue}
           ref={inputRef}

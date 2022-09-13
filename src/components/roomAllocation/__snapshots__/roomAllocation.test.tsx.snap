@@ -91,6 +91,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}
@@ -189,6 +190,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}
@@ -301,6 +303,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}
@@ -399,6 +402,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}
@@ -511,6 +515,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}
@@ -609,6 +614,7 @@ exports[`Test Button component [Render] match snapshot 1`] = `
           </div>
           <input
             data-disabled={false}
+            data-testid="customInputNumber-input"
             disabled={false}
             name="CustomInputNumber"
             onBlur={[Function]}

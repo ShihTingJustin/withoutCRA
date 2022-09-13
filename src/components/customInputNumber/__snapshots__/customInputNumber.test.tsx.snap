@@ -41,10 +41,11 @@ exports[`Test Button component [Render] match snapshot 1`] = `
   </div>
   <input
     data-disabled={false}
+    data-testid="customInputNumber-input"
     disabled={false}
     onBlur={[Function]}
     onChange={[Function]}
-    value={0}
+    value={5}
   />
   <div
     className="button-root"

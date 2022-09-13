@@ -32,118 +32,120 @@ interface InputNumberProps<T extends ValueType = ValueType>
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CustomInputNumber = forwardRef((props: InputNumberProps, ref: Ref<HTMLInputElement>) => {
-  const {
-    min = 0,
-    max = 10,
-    step = 1,
-    value = 0,
-    disabled = false,
-    minusDisabled = false,
-    plusDisabled = false,
-    yetDistributedCount = 0,
-    onChange,
-    onBlur,
-    ...inputProps
-  } = props;
+const CustomInputNumber = forwardRef(
+  (props: InputNumberProps, ref: Ref<HTMLInputElement | null>) => {
+    const {
+      min = 0,
+      max = 10,
+      step = 1,
+      value = 0,
+      disabled = false,
+      minusDisabled = false,
+      plusDisabled = false,
+      yetDistributedCount = 0,
+      onChange,
+      onBlur,
+      ...inputProps
+    } = props;
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  useImperativeHandle(ref, () => inputRef.current);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    useImperativeHandle(ref, () => inputRef?.current);
 
-  const [stateValue, setValue] = useState<number>(Number(value));
-  const [stateMinusDisabled, setMinusDisabled] = useState(minusDisabled);
-  const [statePlusDisabled, setPlusDisabled] = useState(plusDisabled);
+    const [stateValue, setValue] = useState<number>(Number(value));
+    const [stateMinusDisabled, setMinusDisabled] = useState(minusDisabled);
+    const [statePlusDisabled, setPlusDisabled] = useState(plusDisabled);
 
-  const finalMinusDisabled = disabled || minusDisabled || stateMinusDisabled;
-  const finalPlusDisabled = disabled || plusDisabled || statePlusDisabled;
+    const finalMinusDisabled = disabled || minusDisabled || stateMinusDisabled;
+    const finalPlusDisabled = disabled || plusDisabled || statePlusDisabled;
 
-  useEffect(() => {
-    setMinusDisabled(stateValue <= min);
-    setPlusDisabled(stateValue >= max);
+    useEffect(() => {
+      setMinusDisabled(stateValue <= min);
+      setPlusDisabled(stateValue >= max);
 
-    if (stateValue >= min && stateValue <= max) {
-      handleInputEventManually();
-    }
-  }, [stateValue, yetDistributedCount]);
-
-  const correctValue = () => {
-    if (stateValue < min) setValue(min);
-    if (stateValue > max) {
-      if (yetDistributedCount === 0) {
-        setValue(min);
-      } else {
-        setValue(max);
+      if (stateValue >= min && stateValue <= max) {
+        handleInputEventManually();
       }
-    }
-  };
+    }, [stateValue, yetDistributedCount]);
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    correctValue();
-    onBlur(e);
-  };
+    const correctValue = () => {
+      if (stateValue < min) setValue(min);
+      if (stateValue > max) {
+        if (yetDistributedCount === 0) {
+          setValue(min);
+        } else {
+          setValue(max);
+        }
+      }
+    };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (disabled) return;
-    const value = Number(e.target.value);
-    const notNumber = Number.isNaN(value);
-    if (notNumber) return e.preventDefault();
-    setValue(value);
-  };
+    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+      correctValue();
+      onBlur?.(e);
+    };
 
-  const handleInputEventManually = () => {
-    correctValue();
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLInputElement.prototype,
-      'value'
-    ).set;
-    nativeInputValueSetter.call(inputRef.current, String(stateValue));
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
+      const value = Number(e.target.value);
+      const notNumber = Number.isNaN(value);
+      if (notNumber) return e.preventDefault();
+      setValue(value);
+    };
 
-    const inputEvent = new Event('input', { bubbles: true });
-    inputRef.current.dispatchEvent(inputEvent);
-    onChange(inputEvent as unknown as ChangeEvent<HTMLInputElement>);
-  };
+    const handleInputEventManually = () => {
+      correctValue();
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        'value'
+      )?.set;
+      nativeInputValueSetter?.call(inputRef.current, String(stateValue));
 
-  const handleMinus = () => {
-    if (finalMinusDisabled) return;
-    setValue((prev) => {
-      const newValue = prev - step;
-      const isValueValid = newValue >= min;
-      return isValueValid ? newValue : prev;
-    });
-  };
+      const inputEvent = new Event('input', { bubbles: true });
+      inputRef.current?.dispatchEvent(inputEvent);
+      onChange?.(inputEvent as unknown as ChangeEvent<HTMLInputElement>);
+    };
 
-  const handleAdd = () => {
-    if (finalPlusDisabled) return;
-    setValue((prev) => {
-      const newValue = prev + step;
-      const isValueValid = newValue <= max;
-      return isValueValid ? newValue : prev;
-    });
-  };
+    const handleMinus = () => {
+      if (finalMinusDisabled) return;
+      setValue((prev) => {
+        const newValue = prev - step;
+        const isValueValid = newValue >= min;
+        return isValueValid ? newValue : prev;
+      });
+    };
 
-  return (
-    <div className="input-number-root">
-      <Button disabled={finalMinusDisabled} onClick={handleMinus}>
-        <span>
-          <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
-        </span>
-      </Button>
-      <input
-        data-disabled={disabled}
-        value={stateValue}
-        ref={inputRef}
-        disabled={disabled}
-        onBlur={handleBlur}
-        onChange={handleChange}
-        {...inputProps}
-      />
-      <Button disabled={finalPlusDisabled} onClick={handleAdd}>
-        <span>
-          <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
-        </span>
-      </Button>
-    </div>
-  );
-});
+    const handleAdd = () => {
+      if (finalPlusDisabled) return;
+      setValue((prev) => {
+        const newValue = prev + step;
+        const isValueValid = newValue <= max;
+        return isValueValid ? newValue : prev;
+      });
+    };
+
+    return (
+      <div className="input-number-root">
+        <Button disabled={finalMinusDisabled} onClick={handleMinus}>
+          <span>
+            <AiOutlineMinus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
+          </span>
+        </Button>
+        <input
+          data-disabled={disabled}
+          value={stateValue}
+          ref={inputRef}
+          disabled={disabled}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          {...inputProps}
+        />
+        <Button disabled={finalPlusDisabled} onClick={handleAdd}>
+          <span>
+            <AiOutlinePlus size={30} color={disabled ? '#c0c0c0' : '#1e9fd2'} />
+          </span>
+        </Button>
+      </div>
+    );
+  }
+);
 
 export default CustomInputNumber;
